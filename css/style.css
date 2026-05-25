@@ -1096,15 +1096,11 @@ body.light-mode .toast {
 
     .footer-clean {
         gap: 0.5rem;
-        padding-top: 0.45rem;
+        padding: 0.85rem;
         padding-bottom: calc(0.45rem + env(safe-area-inset-bottom));
-        flex-direction: row;
+        flex-direction: column;
+        text-align: center;
     }
-
-    .footer-dev {
-        display: none;
-    }
-
     .footer-links a {
         width: 2rem;
         height: 2rem;
@@ -1152,5 +1148,8 @@ body.light-mode .footer-links a {
     background: rgba(255, 71, 87, 0.4);
     flex-shrink: 0;
 }
+
+
+
 
 /* Small screens: hide dev name */
