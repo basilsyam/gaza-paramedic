@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>مُسعِف غزة - دليل الطوارئ والإسعاف الميداني</title>
+    <meta name="description" content="دليل إسعافات أولية يعمل بالكامل بدون إنترنت لأجل غزة.">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
+    <link rel="shortcut icon" type="image/png" href="images/icon-192.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="مسعف غزة">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <script src="js/leaflet.js"></script>
+</head>
+
+<body class="dark-mode">
+
+    <div id="loadingBar" class="loading-bar"></div>
+
+    <header class="glass">
+
+        <div class="top-nav">
+
+            <div class="logo-area">
+                <i class="fa-solid fa-truck-medical logo-icon"></i>
+                <h1>مُسعِف غزة</h1>
+            </div>
+
+            <div class="header-actions">
+
+                <button id="themeToggle" class="icon-btn" aria-label="تبديل الوضع">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <button id="emergencyBtn" class="emergency-mini" aria-label="عرض حالات الطوارئ">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    طوارئ
+                </button>
+
+                <button id="installBtn" class="install-btn" aria-label="تثبيت التطبيق" style="display:none">
+                    تثبيت
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="search-row">
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                <input type="text" id="searchInput" placeholder="بحث سريع...">
+
+                <button id="clearSearch" class="clear-btn" style="display:none" aria-label="مسح البحث">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="font-controls">
+                <button id="fontDecrease" class="font-btn">A-</button>
+                <button id="fontIncrease" class="font-btn">A+</button>
+            </div>
+
+        </div>
+
+        <div class="stats-mini">
+            <div class="s-item"><span id="totalCount">0</span> حالة</div>
+            <div class="s-sep"></div>
+            <div class="s-item"><span id="gazaCount">0</span> طارئة</div>
+            <div class="s-sep"></div>
+            <div class="s-item"><span id="numbersCount">0</span> رقم</div>
+        </div>
+
+    </header>
+
+    <div id="statusAlert" class="status-alert">
+        <i class="fa-solid fa-circle-exclamation alert-icon"></i>
+
+        <div class="alert-text">
+            <b>تنبيه ميداني:</b>
+            المعلومات الميدانية قد تتغير بسرعة. تأكد من أقرب نقطة آمنة قبل التحرك.
+            <p class="medical-disclaimer">
+                هذا الدليل للمساعدة والإرشاد السريع، ولا يغني عن استشارة الطبيب أو التوجه للطوارئ في الحالات الشديدة والحرجة.
+            </p>
+        </div>
+    </div>
+
+    <nav class="categories">
+
+        <button class="cat-btn active" data-category="all">
+            <i class="fa-solid fa-hospital"></i>
+            الكل
+        </button>
+
+        <button class="cat-btn" data-category="gaza">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            غزة
+        </button>
+
+        <button class="cat-btn" data-category="vitals">
+            <i class="fa-solid fa-heart-pulse"></i>
+            المعدلات الطبيعية
+        </button>
+        <button class="cat-btn" data-category="map">
+            <i class="fa-solid fa-map-location-dot"></i>
+            الخريطة
+        </button>
+
+        <button class="cat-btn" data-category="bag">
+            <i class="fa-solid fa-briefcase-medical"></i>
+            حقيبة الطوارئ
+        </button>
+
+        <button class="cat-btn" data-category="favorites">
+            <i class="fa-solid fa-bookmark"></i>
+            المحفوظات
+        </button>
+
+        <button class="cat-btn" data-category="numbers">
+            <i class="fa-solid fa-phone"></i>
+            أرقام
+        </button>
+
+
+    </nav>
+
+    <section id="mapSection" class="map-section" style="display:none">
+
+        <div class="map-container">
+
+            <div id="map"></div>
+
+            <div class="map-overlay-info">
+                <span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    حالة النقاط الطبية
+                </span>
+            </div>
+
+        </div>
+
+        <div class="map-legend">
+            <span class="legend-item"><span class="dot active"></span> يعمل</span>
+            <span class="legend-item"><span class="dot partial"></span> جزئي</span>
+            <span class="legend-item"><span class="dot out"></span> مغلق</span>
+        </div>
+
+        <p class="map-note">
+            ملاحظة: الخريطة تعمل بالكامل بدون إنترنت.
+        </p>
+
+    </section>
+
+    <main id="cardsContainer"></main>
+
+    <div id="noResults" class="no-results">
+        <p>لا توجد نتائج لـ "<span id="searchTerm"></span>"</p>
+        <button onclick="location.reload()" class="btn">إعادة تحميل</button>
+    </div>
+
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <button id="closeModalBtn" title="إغلاق">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <div id="iosInstallModal" class="modal">
+        <div class="modal-content ios-box">
+
+            <h3>
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                تثبيت التطبيق على آيفون
+            </h3>
+
+            <p>للحصول على أفضل تجربة واستخدام التطبيق بدون إنترنت:</p>
+
+            <ol>
+                <li>اضغط على زر المشاركة Share أسفل الشاشة.</li>
+                <li>اختر "إضافة إلى الشاشة الرئيسية".</li>
+                <li>اضغط "إضافة".</li>
+            </ol>
+
+            <button class="emergency-btn" onclick="document.getElementById('iosInstallModal').style.display='none'">
+                فهمت، شكراً
+            </button>
+
+        </div>
+    </div>
+
+    <button id="backToTop" class="back-to-top" aria-label="العودة للأعلى">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <footer class="footer-clean">
+
+        <div class="footer-top">
+            <i class="fa-solid fa-truck-medical" style="font-size:12px;color:#ff4757"></i>
+            <h3>مُسعِف غزة</h3>
+        </div>
+
+        <div class="footer-dev">
+            <strong>  تم التطوير بواسطة م.باسل عبد القادر صيام</strong>
+        </div>
+
+        <div class="footer-links">
+
+            <a href="https://wa.me/qr/BTS7PWXWB7BAP1"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="واتساب">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+
+            <a href="tel:+972599982722" title="اتصال">
+                <i class="fa-solid fa-phone"></i>
+            </a>
+
+            <a href="https://www.linkedin.com/in/basel-seyam-1387b2379"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+
+        </div>
+
+    </footer>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>

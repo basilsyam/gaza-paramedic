@@ -1,0 +1,22 @@
+{
+  "name": "مُسعِف غزة للطوارئ الميدانية",
+  "short_name": "مُسعِف غزة",
+  "description": "دليل إسعافات أولية وحاسبة طاقة تعمل بالكامل بدون إنترنت لأجل غزة.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
